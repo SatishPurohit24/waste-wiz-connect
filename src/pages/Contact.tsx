@@ -17,6 +17,12 @@ const Contact = () => {
     message: ""
   });
 
+  const [locationCheck, setLocationCheck] = useState({
+    location: "",
+    result: null as "available" | "unavailable" | null,
+    isChecking: false
+  });
+
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
@@ -48,6 +54,33 @@ const Contact = () => {
       subject: "",
       message: ""
     });
+  };
+
+  const handleLocationCheck = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!locationCheck.location.trim()) {
+      toast({
+        title: "Please enter a location",
+        description: "Enter your city or area to check service availability.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setLocationCheck(prev => ({ ...prev, isChecking: true }));
+
+    // Simulate API call with setTimeout
+    setTimeout(() => {
+      const location = locationCheck.location.toLowerCase().trim();
+      const isNagpur = location.includes('nagpur');
+      
+      setLocationCheck(prev => ({
+        ...prev,
+        result: isNagpur ? "available" : "unavailable",
+        isChecking: false
+      }));
+    }, 1000);
   };
 
   return (
@@ -228,22 +261,86 @@ const Contact = () => {
             </p>
           </div>
 
-          {/* Placeholder Map - In a real implementation, you would integrate with Google Maps */}
+          {/* Location Availability Checker */}
           <div className="max-w-4xl mx-auto">
             <Card className="p-8 text-center shadow-professional">
               <MapPin className="w-16 h-16 text-primary mx-auto mb-4" />
-              <h3 className="text-2xl font-bold mb-4 text-foreground">Interactive Map</h3>
+              <h3 className="text-2xl font-bold mb-4 text-foreground">Check Service Availability</h3>
               <p className="text-muted-foreground mb-6">
-                Our service area covers the entire metropolitan region. Contact us to confirm service availability in your specific location.
+                Enter your location to see if we can serve you with our free e-waste pickup service.
               </p>
-              <div className="bg-muted/30 rounded-lg p-12 mb-6">
+
+              <form onSubmit={handleLocationCheck} className="max-w-md mx-auto mb-6">
+                <div className="flex gap-2">
+                  <Input
+                    type="text"
+                    placeholder="Enter your city (e.g., Nagpur)"
+                    value={locationCheck.location}
+                    onChange={(e) => setLocationCheck(prev => ({ ...prev, location: e.target.value }))}
+                    className="flex-1"
+                  />
+                  <Button 
+                    type="submit" 
+                    variant="cta" 
+                    disabled={locationCheck.isChecking}
+                  >
+                    {locationCheck.isChecking ? "Checking..." : "Check"}
+                  </Button>
+                </div>
+              </form>
+
+              {locationCheck.result && (
+                <div className={`p-6 rounded-lg mb-4 ${
+                  locationCheck.result === "available" 
+                    ? "bg-green-50 border border-green-200" 
+                    : "bg-orange-50 border border-orange-200"
+                }`}>
+                  {locationCheck.result === "available" ? (
+                    <div className="text-center">
+                      <div className="text-2xl mb-2">🎉</div>
+                      <h4 className="text-xl font-bold text-green-700 mb-2">
+                        Great news! We serve Nagpur!
+                      </h4>
+                      <p className="text-green-600">
+                        We'll pick up your e-waste right from your doorstep. Schedule your free pickup today and join us in making Nagpur a greener city!
+                      </p>
+                      <Button variant="cta" size="lg" className="mt-4" onClick={() => {
+                        // Scroll to contact form or redirect to schedule page
+                        window.location.href = '/schedule';
+                      }}>
+                        Schedule Free Pickup Now
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="text-center">
+                      <div className="text-2xl mb-2">🌱</div>
+                      <h4 className="text-xl font-bold text-orange-700 mb-2">
+                        Service expansion coming soon!
+                      </h4>
+                      <p className="text-orange-600 mb-4">
+                        We're currently serving Nagpur but are actively working to expand our eco-friendly e-waste pickup service to more cities. Your interest helps us prioritize new locations!
+                      </p>
+                      <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                        <Button variant="outline" onClick={() => {
+                          setFormData(prev => ({ ...prev, subject: `Service expansion request for ${locationCheck.location}` }));
+                          document.getElementById('message')?.scrollIntoView({ behavior: 'smooth' });
+                        }}>
+                          Request Service in {locationCheck.location}
+                        </Button>
+                        <Button variant="cta" onClick={() => window.location.href = '/about'}>
+                          Learn About Our Mission
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="bg-muted/30 rounded-lg p-8">
                 <p className="text-muted-foreground">
-                  [Interactive map would be embedded here showing our service coverage area]
+                  💡 Currently serving Nagpur with free doorstep e-waste pickup. Help us expand by sharing our mission!
                 </p>
               </div>
-              <Button variant="cta" size="lg">
-                Check Service Availability
-              </Button>
             </Card>
           </div>
         </div>
