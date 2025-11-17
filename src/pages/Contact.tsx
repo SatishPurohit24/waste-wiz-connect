@@ -145,10 +145,10 @@ const Contact = () => {
                   </div>
                   <h3 className="text-xl font-bold text-foreground">Location</h3>
                 </div>
-                <p className="text-muted-foreground mb-2">Service Area</p>
+                <p className="text-muted-foreground mb-2">We currently serve</p>
                 <p className="text-lg font-semibold text-foreground">
-                  Greater Metropolitan Area<br />
-                  Serving all surrounding counties
+                  Nagpur, Maharashtra<br />
+                  India
                 </p>
               </Card>
 

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import pickupImage from "@/assets/pickup-service.jpg";
+import SecureDisposal from "@/components/SecureDisposal";
 
 const Services = () => {
   const householdServices = [
@@ -232,6 +233,9 @@ const Services = () => {
           </div>
         </div>
       </section>
+
+      {/* Secure Disposal Guarantee */}
+      <SecureDisposal />
 
       {/* CTA Section */}
       <section className="section-padding bg-gradient-hero">
